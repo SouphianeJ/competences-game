@@ -1,20 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { roomsCol } from "@/lib/db";
+import { NextResponse } from "next/server";
 
-interface RouteParams {
-  params: {
-    code: string;
-  };
-}
-
-// GET état room
-export async function GET(request: NextRequest, { params }: RouteParams) {
-  const { code } = params;
-  
-  // Get room state by code
-  return NextResponse.json({ 
-    code,
-    state: 'waiting',
-    players: [],
-    currentLevel: null
-  });
+export async function GET(_: Request, { params }: { params: { code: string }}) {
+  const rooms = await roomsCol();
+  const room = await rooms.findOne({ code: params.code.toUpperCase() });
+  if (!room) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  // On renvoie tel quel (POC) ; le level contient les réponses correctes.
+  return NextResponse.json({ room });
 }

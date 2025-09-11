@@ -1,18 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { roomsCol } from "@/lib/db";
+import { NextResponse } from "next/server";
 
-interface RouteParams {
-  params: {
-    code: string;
-  };
-}
+export async function POST(_: Request, { params }: { params: { code: string }}) {
+  const code = params.code.toUpperCase();
+  const rooms = await roomsCol();
+  const room = await rooms.findOne({ code });
+  if (!room) return NextResponse.json({ error: "Salle introuvable" }, { status: 404 });
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
-  const { code } = params;
-  
-  // End game logic
-  return NextResponse.json({ 
-    success: true,
-    message: `Game ended for room ${code}`,
-    gameState: 'ended'
-  });
+  const expiresAt = new Date(Date.now() + 60_000); // purge dans ~60s
+  await rooms.updateOne({ code }, { $set: { status: "ended", endAt: new Date(), expiresAt } });
+  return NextResponse.json({ ok: true });
 }

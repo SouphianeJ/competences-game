@@ -1,19 +1,19 @@
-import type { Metadata } from "next";
-import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "Competences Game",
-  description: "A game to test and develop competences",
+export const metadata = {
+  title: "AOCE POC",
+  description: "4 tours AOCE, salle à code, Mongo TTL"
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="fr">
+      <body>
+        <div className="container">
+          {children}
+          <div className="footer">AOCE POC — minimal & éphémère</div>
+        </div>
+      </body>
     </html>
   );
 }

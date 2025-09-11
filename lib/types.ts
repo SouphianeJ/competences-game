@@ -1,31 +1,33 @@
-// Type definitions for the competences game
+export type SlotType = "A" | "O" | "C" | "E";
 
-export interface Player {
+export type Option = {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+};
+
+export type Level = {
+  id: string;
+  slots: Record<SlotType, Option[]>;
+  template: string;
+};
+
+export type Player = {
   id: string;
   name: string;
-  score: number;
-  isReady: boolean;
-}
+  score?: number;
+  done?: boolean;
+};
 
-export interface Room {
+export type Room = {
+  _id?: any;
   code: string;
-  name: string;
+  status: "lobby" | "playing" | "ended";
+  hostId: string;
   players: Player[];
-  currentLevel: string | null;
-  state: 'waiting' | 'playing' | 'finished';
-  createdAt: Date;
-}
-
-export interface GameSession {
-  roomCode: string;
-  playerId: string;
-  answers: Answer[];
-  startTime: Date;
-  endTime?: Date;
-}
-
-export interface Answer {
-  questionId: string;
-  selectedOption: number;
-  timestamp: Date;
-}
+  level: Level;
+  createdAt: string | Date;
+  expiresAt: string | Date;
+  startAt?: string | Date;
+  endAt?: string | Date;
+};
